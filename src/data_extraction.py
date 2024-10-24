@@ -3,6 +3,7 @@ import pandas as pd
 from queries import sql_queries
 import matplotlib.pyplot as plt
 import os
+from correlations import compute_and_plot_correlation
 
 # Set up DB connection
 HOST = 'starburst.g8s-data-platform-prod.glovoint.com'
@@ -99,7 +100,3 @@ def plot_kpi_evolution(base_df, rolling_mean_value, start_date, end_date, plot_t
     plt.show()
 
 
-# Example usage
-query_names = ['pl_city_orders']
-base_df = create_base_df(query_names, reload_data=True, transform_func=pivot_on_city)  # Set reload_data=True to reload and save new data
-plot_kpi_evolution(base_df, rolling_mean_value=14, start_date='2024-09-01', end_date='2024-09-30', plot_type='rolling')
