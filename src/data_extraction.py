@@ -66,9 +66,12 @@ def create_base_df(query_names, reload_data=False, transform_func=None):
     return base_df
 
 # Example usage:
-def example_transform(df):
-    return df
-
+def pivot_on_city(df):
+    pivot_df = df.pivot(index='date', columns='city_code', values='orders').reset_index()
+    pivot_df.columns.name = None
+    pivot_df = pivot_df.fillna(0)
+    print(pivot_df)
+    return pivot_df
 
 def plot_kpi_evolution(base_df, rolling_mean_value, start_date, end_date, plot_type='both'):
     base_df['date'] = pd.to_datetime(base_df['date'])
@@ -97,7 +100,6 @@ def plot_kpi_evolution(base_df, rolling_mean_value, start_date, end_date, plot_t
 
 
 # Example usage
-query_names = ['waw_daily_orders', 'gdn_daily_orders']
-base_df = create_base_df(query_names, reload_data=False, transform_func=example_transform)  # Set reload_data=True to reload and save new data
-plot_kpi_evolution(base_df, rolling_mean_value=14, start_date='2024-09-01', end_date='2024-09-30',
-                      plot_type='rolling')
+query_names = ['pl_city_orders']
+base_df = create_base_df(query_names, reload_data=True, transform_func=pivot_on_city)  # Set reload_data=True to reload and save new data
+plot_kpi_evolution(base_df, rolling_mean_value=14, start_date='2024-09-01', end_date='2024-09-30', plot_type='rolling')
