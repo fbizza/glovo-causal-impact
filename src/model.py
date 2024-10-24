@@ -3,8 +3,8 @@ import pandas as pd
 
 def run_synthetic_control(df, start_date, intervention_date, end_date, target_column, date_column='date'):
     # Extract predictors by excluding the target and date columns
-    predictors = [col for col in df.columns if col not in [target_column, date_column]]
-
+    #predictors = [col for col in df.columns if col not in [target_column, date_column]]
+    predictors = ['GDN']
     # Initialize the SyntheticControl object
     sc = SyntheticControl(
         target_column=target_column,
@@ -26,6 +26,3 @@ def run_synthetic_control(df, start_date, intervention_date, end_date, target_co
     # Plot the model
     model.plot()
 
-# Example usage
-# df = pd.read_csv('your_data.csv')  # Load your data into a DataFrame
-# run_synthetic_control(df, '2024-01-01', '2024-09-01', '2024-09-30', 'WAW')
