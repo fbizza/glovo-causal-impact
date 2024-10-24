@@ -55,6 +55,6 @@ def create_top_correlated_df(df, column_name, top_n_correlation):
         raise ValueError("The original DataFrame does not contain a 'date' column.")
 
     top_correlated_columns = top_n_correlation.index.tolist()
-    new_df = df[['date', column_name] + top_correlated_columns]
+    new_df = df.loc[:, ['date', column_name] + top_correlated_columns].copy()
 
     return new_df
