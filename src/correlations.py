@@ -49,4 +49,12 @@ def compute_and_plot_correlation(df, column_name, top_n=10):
     plt.show()
     return top_n_correlation
 
+def create_top_correlated_df(df, column_name, top_n_correlation):
 
+    if 'date' not in df.columns:
+        raise ValueError("The original DataFrame does not contain a 'date' column.")
+
+    top_correlated_columns = top_n_correlation.index.tolist()
+    new_df = df[['date', column_name] + top_correlated_columns]
+
+    return new_df
