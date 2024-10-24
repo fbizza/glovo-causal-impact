@@ -36,8 +36,11 @@ def create_directory_if_not_exists(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
+# To create the timeseries base table
+# It executes and joins (on 'date' column) queries from the sql_queries file,
+# it's possible to pass a transform function if some more pre-processing is needed
+def create_base_df(query_names, reload_data=False, transform_func=None):
 
-def create_base_df(query_names, reload_data=False):
     create_directory_if_not_exists(DATA_FOLDER)
 
     if not reload_data and os.path.exists(BASE_DF_FILE):
@@ -55,8 +58,16 @@ def create_base_df(query_names, reload_data=False):
     for df in dataframes[1:]:
         base_df = pd.merge(base_df, df, on='date')
 
+    # Apply the transformation function if provided
+    if transform_func:
+        base_df = transform_func(base_df)
+
     save_df(base_df, BASE_DF_FILE)
     return base_df
+
+# Example usage:
+def example_transform(df):
+    return df
 
 
 def plot_orders_evolution(base_df, rolling_mean_value, start_date, end_date, plot_type='both'):
@@ -92,6 +103,6 @@ def plot_orders_evolution(base_df, rolling_mean_value, start_date, end_date, plo
 
 # Example usage
 query_names = ['waw_daily_orders', 'gdn_daily_orders']
-base_df = create_base_df(query_names, reload_data=False)  # Set reload_data=True to reload and save new data
+base_df = create_base_df(query_names, reload_data=True)  # Set reload_data=True to reload and save new data
 plot_orders_evolution(base_df, rolling_mean_value=14, start_date='2024-09-01', end_date='2024-09-30',
                       plot_type='normal')
