@@ -70,7 +70,7 @@ def example_transform(df):
     return df
 
 
-def plot_orders_evolution(base_df, rolling_mean_value, start_date, end_date, plot_type='both'):
+def plot_kpi_evolution(base_df, rolling_mean_value, start_date, end_date, plot_type='both'):
     base_df['date'] = pd.to_datetime(base_df['date'])
     base_df = base_df.sort_values(['date'])
 
@@ -88,13 +88,8 @@ def plot_orders_evolution(base_df, rolling_mean_value, start_date, end_date, plo
                 plt.plot(base_df['date'], base_df[f'{column}_rolling_mean'], linewidth=2,
                          label=f'{rolling_mean_value}D rolling average for {column}')
 
-    max_value = base_df.drop(columns=['date']).max().max()
-
-    plt.axvline(x=pd.Timestamp(start_date), color='#F2CC38', linestyle='--', linewidth=2)
-    plt.text(pd.Timestamp(start_date), max_value, 'Start', color='black', rotation=90, verticalalignment='bottom')
-
-    plt.axvline(x=pd.Timestamp(end_date), color='red', linestyle='--', linewidth=2)
-    plt.text(pd.Timestamp(end_date), max_value, 'End', color='black', rotation=90, verticalalignment='bottom')
+    plt.axvline(x=pd.Timestamp(start_date), color='#F2CC38', linestyle='--', linewidth=2, label='Start')
+    plt.axvline(x=pd.Timestamp(end_date), color='red', linestyle='--', linewidth=2, label='End')
 
     plt.legend()
     plt.title('KPI Evolution')
@@ -103,6 +98,6 @@ def plot_orders_evolution(base_df, rolling_mean_value, start_date, end_date, plo
 
 # Example usage
 query_names = ['waw_daily_orders', 'gdn_daily_orders']
-base_df = create_base_df(query_names, reload_data=True)  # Set reload_data=True to reload and save new data
-plot_orders_evolution(base_df, rolling_mean_value=14, start_date='2024-09-01', end_date='2024-09-30',
-                      plot_type='normal')
+base_df = create_base_df(query_names, reload_data=False, transform_func=example_transform)  # Set reload_data=True to reload and save new data
+plot_kpi_evolution(base_df, rolling_mean_value=14, start_date='2024-09-01', end_date='2024-09-30',
+                      plot_type='rolling')
